@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EnrollmentConfirmationMail;
 use App\Models\Child;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -48,6 +51,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => null,
             'contact_number' => $request->contact_number,
+            'remember_token' => Str::random(40),
         ]);
 
         $child = Child::create([
@@ -58,13 +62,13 @@ class AuthController extends Controller
             'user_id' => $user->id,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Send confirmation email
+        Mail::to($user->email)->send(new EnrollmentConfirmationMail($user));
 
         return response()->json([
-            'message' => 'Successfully registered for enrollment.',
+            'message' => 'Successfully registered for enrollment. Please check your email for confirmation.',
             'user' => $user,
             'child' => $child,
-            'token' => $token,
         ]);
 
     }
@@ -83,6 +87,28 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
+
+    public function confirmEnrollment($token)
+    {
+        $user = User::where('remember_token', $token)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Invalid or expired token'], 404);
+        }
+
+        $user->email_verified_at = now();
+        $user->remember_token = null;
+        $user->save();
+
+        // Optionally: create and return an API token if you want to auto-login
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Enrollment confirmed successfully!',
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
 
 
 
