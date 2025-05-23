@@ -18,6 +18,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'Admin User',
                 'password' => bcrypt('password'), // Use a secure password hashing method
+                'contact_number' => '', // Add a contact number
                 'role' => 'admin', // Set the role to admin
             ]
         );
