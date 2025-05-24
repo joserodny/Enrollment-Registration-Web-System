@@ -28,7 +28,12 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
             'token' => $token,
         ]);
     }
@@ -68,8 +73,6 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully registered for enrollment. Please check your email for confirmation.',
-            'user' => $user,
-            'child' => $child,
         ]);
     }
 
@@ -110,8 +113,6 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Account setup complete.',
-            'token' => $token,
-            'user' => $user,
         ]);
     }
 
