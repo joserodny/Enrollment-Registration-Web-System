@@ -3,19 +3,37 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 export const EnrollmentPage = () => {
-        const [formData, setFormData] = useState({
+
+        const [parentData, setParentData] = useState({
             parent_name: '',
             email: '',
             contact_number: '',
-            child_name: '',
-            date_of_birth: '',
-            lrn_or_student_id: '',
             relationship: '',
         });
 
+        const [childData, setChildData] = useState([
+            { child_name: '', date_of_birth: '', lrn_or_student_id: '' }
+        ]);
+
         const handleChange = (e) => {
             const { name, value } = e.target;
-            setFormData(prev => ({ ...prev, [name]: value }));
+            setParentData(prev => ({ ...prev, [name]: value }));
+        };
+
+        const handleChildChange = (index, e) => {
+            const { name, value } = e.target;
+            const updatedChildren = [...childData];
+            updatedChildren[index][name] = value;
+            setChildData(updatedChildren);
+        };
+
+        const addChild = () => {
+            setChildData([...childData, { child_name: '', date_of_birth: '', lrn_or_student_id: '' }]);
+        };
+
+        const removeChild = (index) => {
+            const updatedChildren = childData.filter((_, i) => i !== index);
+            setChildData(updatedChildren);
         };
 
         const handleSubmit = (e) => {
@@ -30,22 +48,22 @@ export const EnrollmentPage = () => {
             },
         });
 
-        axios.post('http://localhost:8000/api/register', formData, {
+        axios.post('http://localhost:8000/api/register', {
+            parent: parentData,
+            children: childData
+        }, {
             headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             }
         })
         .then(response => {
-            setFormData({
+            setParentData({
                 parent_name: '',
                 email: '',
                 contact_number: '',
-                child_name: '',
-                date_of_birth: '',
-                lrn_or_student_id: '',
-                relationship: '',
             });
+            setChildData([{ child_name: '', date_of_birth: '', lrn_or_student_id: '' }]);
 
             Swal.fire({
                 icon: 'success',
@@ -69,10 +87,10 @@ export const EnrollmentPage = () => {
             });
         };
     return (
-        <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-            <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-                <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-                    <div className="max-w-md mx-auto">
+        <div className="h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+            <div className="relative py-3 max-w-full sm:max-w-2xl sm:mx-auto">
+                <div className="relative px-4 py-10 bg-white mx-2 md:mx-0 shadow rounded-3xl sm:p-10">
+                    <div className="w-full max-w-2xl mx-auto">
                         <div className="flex items-center space-x-5">
                             <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
                                 <h2 className="leading-relaxed">Register your Child</h2>
@@ -82,30 +100,40 @@ export const EnrollmentPage = () => {
                             </div>
                         </div>
                         <div className="divide-y divide-gray-200">
-                            <div className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7">
+                            <div className="py-8 text-base leading-6 space-y-6">
                                 {/* Student Information Section */}
                                 <div className="space-y-4">
                                     <h3 className="font-medium text-gray-900">Student Information</h3>
-                                    <div className="flex flex-col">
-                                        <label className="leading-loose">Name of Child*</label>
-                                        <input 
-                                            type="text" 
-                                            name="child_name"
-                                            value={formData.child_name}
-                                            onChange={handleChange}
-                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
-                                            placeholder="Full name" 
-                                            required 
-                                        />
-                                    </div>
-                                    <div className="flex flex-col">
+                                    <button
+                                        type="button"
+                                        onClick={addChild}
+                                        className="text-blue-600 hover:text-blue-800 font-medium text-sm mb-4"
+                                        >
+                                        + Add Another Child
+                                    </button>
+                                    {childData.map((child, index) => (
+                                    <div key={index}  className="grid grid-cols-3 gap-4">
+                                        <div className="flex flex-col">
+                                            <label className="leading-loose">Name of Child*</label>
+                                            <input 
+                                                type="text" 
+                                                name="child_name"
+                                                value={child.child_name}
+                                                onChange={(e) => handleChildChange(index, e)}
+                                                className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                                placeholder="Full name" 
+                                                required 
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col">
                                         <label className="leading-loose">Birthday*</label>
                                         <div className="relative focus-within:text-gray-600 text-gray-400">
                                             <input 
                                                 type="date"
                                                 name="date_of_birth"
-                                                value={formData.date_of_birth}
-                                                onChange={handleChange} 
+                                                value={child.date_of_birth}
+                                                onChange={(e) => handleChildChange(index, e)}
                                                 className="pr-4 pl-10 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                                 required 
                                             />
@@ -115,18 +143,34 @@ export const EnrollmentPage = () => {
                                                 </svg>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="flex flex-col">
+                                        </div>
+
+                                        <div className="flex flex-col">
                                         <label className="leading-loose">LRN or Student ID</label>
                                         <input 
                                             type="text" 
                                             name="lrn_or_student_id"
-                                            value={formData.lrn_or_student_id}
-                                            onChange={handleChange}
+                                            value={child.lrn_or_student_id}
+                                            onChange={(e) => handleChildChange(index, e)}
                                             className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                             placeholder="If applicable" 
                                         />
+
+                                         <div className="flex flex-col">
+                                            {childData.length > 1 && (
+                                                    <button
+                                                    type="button"
+                                                    onClick={() => removeChild(index)}
+                                                    className="text-red-600 hover:text-red-800 text-sm"
+                                                    >
+                                                    Remove
+                                                    </button>
+                                                )}
+                                        </div>
+                                        </div>
+
                                     </div>
+                                    ))}
                                 </div>
 
                                 {/* Parent/Guardian Information Section */}
@@ -137,7 +181,7 @@ export const EnrollmentPage = () => {
                                         <input 
                                             type="text" 
                                             name="parent_name"
-                                            value={formData.parent_name}
+                                            value={parentData.parent_name}
                                             onChange={handleChange}
                                             className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                             placeholder="Full name" 
@@ -149,7 +193,7 @@ export const EnrollmentPage = () => {
                                         <input 
                                             type="tel" 
                                             name="contact_number"
-                                            value={formData.contact_number}
+                                            value={parentData.contact_number}
                                             onChange={handleChange}
                                             className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                             placeholder="+63 912 345 6789" 
@@ -161,7 +205,7 @@ export const EnrollmentPage = () => {
                                         <input 
                                             type="email" 
                                             name="email"
-                                            value={formData.email}
+                                            value={parentData.email}
                                             onChange={handleChange}
                                             className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                             placeholder="your@email.com" 
@@ -172,7 +216,7 @@ export const EnrollmentPage = () => {
                                         <label className="leading-loose">Parent Relationship*</label>
                                         <select 
                                             name="relationship"
-                                            value={formData.relationship}
+                                            value={parentData.relationship}
                                             onChange={handleChange}
                                             className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
                                             required

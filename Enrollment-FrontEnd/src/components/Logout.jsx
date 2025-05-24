@@ -26,7 +26,6 @@ const LogoutButton = () => {
     return (
         <button
         onClick={handleLogout}
-        
         className="cursor-pointer py-2 inline-block text-white px-2 font-semibold"
         >
         Logout

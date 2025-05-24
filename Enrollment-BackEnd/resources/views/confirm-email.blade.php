@@ -276,7 +276,13 @@
                                                                     <div
                                                                         style="color:#2f2f2f;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;line-height:1.5;text-align:center;mso-line-height-alt:24px;">
                                                                         <p style="margin: 0;"><strong>Thank you for
-                                                                                enrolling {{ $child->name }}</strong>
+                                                                                enrolling your child(
+                                                                                @foreach ($children as $child)
+                                                                                    {{ $child->name }},
+                                                                                @endforeach
+                                                                                ) in our program. We are excited to have
+                                                                                you.
+                                                                            </strong>
                                                                         </p>
                                                                         <p style="margin: 0;">To complete registration,
                                                                             please confirm your details:</p>
