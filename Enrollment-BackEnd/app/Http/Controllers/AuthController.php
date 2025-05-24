@@ -25,7 +25,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('login')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -42,7 +42,7 @@ class AuthController extends Controller
 
             'child_name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
-            'lrn_or_student_id' => 'required|string|max:255',
+            'lrn_or_student_id' => 'string|max:255',
             'relationship' => 'required|string|max:255',
         ]);
 
@@ -63,14 +63,13 @@ class AuthController extends Controller
         ]);
 
         // Send confirmation email
-        Mail::to($user->email)->send(new EnrollmentConfirmationMail($user));
+        Mail::to($user->email)->send(new EnrollmentConfirmationMail($user, $child));
 
         return response()->json([
             'message' => 'Successfully registered for enrollment. Please check your email for confirmation.',
             'user' => $user,
             'child' => $child,
         ]);
-
     }
 
 
@@ -88,28 +87,32 @@ class AuthController extends Controller
     }
 
 
-    public function confirmEnrollment($token)
+    public function completeRegistration(Request $request)
     {
-        $user = User::where('remember_token', $token)->first();
+        $request->validate([
+            'token' => 'required|string',
+            'password' => 'required|string|confirmed|min:8',
+        ]);
 
-        if (!$user) {
-            return response()->json(['error' => 'Invalid or expired token'], 404);
+        $user = User::where('remember_token', $request->token)->first();
+
+        if (!$user || $user->created_at->lt(now()->subDays(7))) {
+            return response()->json(['error' => 'Invalid or expired link'], 400);
         }
 
+        $user->password = Hash::make($request->password);
         $user->email_verified_at = now();
         $user->remember_token = null;
         $user->save();
 
-        // Optionally: create and return an API token if you want to auto-login
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Enrollment confirmed successfully!',
+            'message' => 'Account setup complete.',
             'token' => $token,
             'user' => $user,
         ]);
     }
-
 
 
 }

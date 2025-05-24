@@ -1,0 +1,190 @@
+import { useState } from 'react';
+import axios from 'axios';
+
+export const EnrollmentPage = () => {
+        const [formData, setFormData] = useState({
+            parent_name: '',
+            email: '',
+            contact_number: '',
+            child_name: '',
+            date_of_birth: '',
+            lrn_or_student_id: '',
+            relationship: ''
+        });
+        const [message, setMessage] = useState('');
+        const [isLoading, setIsLoading] = useState(false);
+
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({ ...prev, [name]: value }));
+        };
+
+        const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setMessage('');
+
+        axios.post('http://localhost:8000/api/register', formData, {
+            headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            setMessage(response.data.message || 'Registration successful! Check your email for confirmation.');
+            setFormData({
+            parent_name: '',
+            email: '',
+            contact_number: '',
+            child_name: '',
+            date_of_birth: '',
+            lrn_or_student_id: '',
+            relationship: ''
+            });
+        })
+        .catch(error => {
+            const errorMessage = error.response?.data?.message 
+            || error.message 
+            || 'Registration failed';
+            setMessage(errorMessage);
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
+        };
+    return (
+        <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+            <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+                <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+                    <div className="max-w-md mx-auto">
+                        <div className="flex items-center space-x-5">
+                            <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
+                                <h2 className="leading-relaxed">Register your Child</h2>
+                                <p className="text-sm text-gray-500 font-normal leading-relaxed">
+                                    Please fill out all required fields to complete enrollment
+                                </p>
+                            </div>
+                        </div>
+                        {message && <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>{message}</div>}
+                        <div className="divide-y divide-gray-200">
+                            <div className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7">
+                                {/* Student Information Section */}
+                                <div className="space-y-4">
+                                    <h3 className="font-medium text-gray-900">Student Information</h3>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Name of Child*</label>
+                                        <input 
+                                            type="text" 
+                                            name="child_name"
+                                            value={formData.child_name}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            placeholder="Full name" 
+                                            required 
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Birthday*</label>
+                                        <div className="relative focus-within:text-gray-600 text-gray-400">
+                                            <input 
+                                                type="date"
+                                                name="date_of_birth"
+                                                value={formData.date_of_birth}
+                                                onChange={handleChange} 
+                                                className="pr-4 pl-10 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                                required 
+                                            />
+                                            <div className="absolute left-3 top-2">
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">LRN or Student ID</label>
+                                        <input 
+                                            type="text" 
+                                            name="lrn_or_student_id"
+                                            value={formData.lrn_or_student_id}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            placeholder="If applicable" 
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Parent/Guardian Information Section */}
+                                <div className="space-y-4">
+                                    <h3 className="font-medium text-gray-900">Parent/Guardian Information</h3>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Parent Name*</label>
+                                        <input 
+                                            type="text" 
+                                            name="parent_name"
+                                            value={formData.parent_name}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            placeholder="Full name" 
+                                            required 
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Parent Contact Number*</label>
+                                        <input 
+                                            type="tel" 
+                                            name="contact_number"
+                                            value={formData.contact_number}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            placeholder="+63 912 345 6789" 
+                                            required 
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Parent Email Address*</label>
+                                        <input 
+                                            type="email" 
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            placeholder="your@email.com" 
+                                            required 
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="leading-loose">Parent Relationship*</label>
+                                        <select 
+                                            name="relationship"
+                                            value={formData.relationship}
+                                            onChange={handleChange}
+                                            className="px-4 py-2 border focus:ring-blue-500 focus:border-blue-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                            required
+                                        >
+                                            <option value="">Select relationship</option>
+                                            <option>Mother</option>
+                                            <option>Father</option>
+                                            <option>Guardian</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="pt-4 flex items-center space-x-4">
+                                <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none border border-gray-300 hover:bg-gray-50">
+                                    <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> Cancel
+                                </button>
+                                <button type="submit" disabled={isLoading} onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none transition duration-200">
+                                    {isLoading ? 'Submitting...' : 'Submit Enrollment'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

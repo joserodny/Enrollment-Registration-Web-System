@@ -21,4 +21,4 @@ Route::middleware('auth:sanctum')->group(function () {
 // Enrollment routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/confirm-enrollment/{token}', [AuthController::class, 'confirmEnrollment']);
-
+Route::post('/complete-registration', [AuthController::class, 'completeRegistration']);

@@ -14,14 +14,16 @@ class EnrollmentConfirmationMail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $child;
     public $link;
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $child)
     {
         $this->user = $user;
-        $this->link = config('app.frontend_url') . "/confirm-enrollment/{$user->remember_token}";
+        $this->child = $child;
+        $this->link = config('app.frontend_url') . "/complete-registration/{$user->remember_token}";
 
     }
     /**
@@ -43,6 +45,7 @@ class EnrollmentConfirmationMail extends Mailable
             view: 'confirm-email',
             with: [
                 'user' => $this->user,
+                'child' => $this->child,
                 'link' => $this->link,
             ]
         );
