@@ -11,7 +11,7 @@ export const RoutesComponent = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
 
-      <Route path="/Enrollment" element={   <GuestRoute> <EnrollmentPage />  </GuestRoute>} />
+      <Route path="/Enrollment" element={ <EnrollmentPage /> } />
       <Route path="/Login" element={   <GuestRoute><LoginPage /></GuestRoute>} />
       <Route path="/Dashboard" element={   <PrivateRoute><CheckRole/></PrivateRoute>} />
     </Routes>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashBoardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,9 @@ Route::post('/complete-registration', [AuthController::class, 'completeRegistrat
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/authenticated-user', [AuthController::class, 'authenticatedUser']);
+
+    // Admin Dashboard
+    Route::get('/enrollees', [AdminDashBoardController::class, 'index']);
 });
 // End Authentication routes
 

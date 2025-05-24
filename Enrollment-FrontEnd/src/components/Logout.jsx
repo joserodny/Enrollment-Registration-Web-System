@@ -6,10 +6,10 @@ const LogoutButton = () => {
         const token = localStorage.getItem('auth_token');
 
         axios.post('http://localhost:8000/api/logout', {}, {
-        headers: {
+            headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-        },
+            },
         })
         .then(() => {
             localStorage.removeItem('auth_token');
@@ -19,7 +19,7 @@ const LogoutButton = () => {
         .catch(() => {
             localStorage.removeItem('auth_token');
             localStorage.removeItem('user_role');
-            window.location.href = '/Login';
+            window.location.href = '/';
         });
     };
 

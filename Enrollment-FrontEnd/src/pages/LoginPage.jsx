@@ -17,8 +17,7 @@ export const LoginPage = () => {
         };
 
     const handleLogin = () => {
-        axios.post(
-            'http://localhost:8000/api/login', 
+        axios.post('http://localhost:8000/api/login', 
             formData,
             { headers: { 'Content-Type': 'application/json' } },
         )

@@ -2,7 +2,7 @@ import coverBg from "../../assets/images/cdc-gsRi9cWCIB0-unsplash.jpg";
 
 export const HeroSection = () => {
   return (
-    <section className="cover bg-blue-teal-gradient relative bg-blue-600 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 overflow-hidden py-48 flex items-center min-h-screen">
+    <div className="cover bg-blue-teal-gradient relative bg-blue-600 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64 overflow-hidden py-48 flex items-center min-h-screen">
     <div className="h-full absolute top-0 left-0 z-0">
       <img
         src={coverBg}
@@ -31,7 +31,7 @@ export const HeroSection = () => {
         </div>
       </div>
     </div>
-  </section>
+  </div>
   );
 }
 

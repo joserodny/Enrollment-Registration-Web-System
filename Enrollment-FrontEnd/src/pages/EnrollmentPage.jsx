@@ -62,6 +62,7 @@ export const EnrollmentPage = () => {
                 parent_name: '',
                 email: '',
                 contact_number: '',
+                relationship: '',
             });
             setChildData([{ child_name: '', date_of_birth: '', lrn_or_student_id: '' }]);
 
