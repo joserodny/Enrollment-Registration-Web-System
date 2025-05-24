@@ -11,15 +11,14 @@ class Child extends Model
         'name',
         'date_of_birth',
         'lrn_or_student_id',
-        'relationship',
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
     ];
 
-    public function user()
+    public function parent()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

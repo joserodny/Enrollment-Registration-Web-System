@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Child;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class AdminDashBoardController extends Controller
 {
@@ -80,5 +82,25 @@ class AdminDashBoardController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function exportEnrollees()
+    {
+        function enrolleesGenerator() {
+            foreach (Child::with('parent')->cursor() as $child) {
+                $parent = $child->parent;
+                yield [
+                    'Parent Name' => $parent->name ?? '',
+                    'Child Name' => $child->name ?? '',
+                    'Birthday' => $child->date_of_birth?->format('Y-m-d') ?? '',
+                    'LRN/Student ID' => $child->lrn_or_student_id ?? '',
+                    'Relationship' => $parent->relationship ?? '',
+                    'Contact Number' => $parent->contact_number ?? '',
+                    'Email' => $parent->email ?? ''
+                ];
+            }
+        }
+
+        return (new FastExcel(enrolleesGenerator()))->download('enrollees.csv');
     }
 }

@@ -157,7 +157,7 @@ export const EnrollmentPage = () => {
                                             placeholder="If applicable" 
                                         />
 
-                                         <div className="flex flex-col">
+                                        <div className="flex flex-col">
                                             {childData.length > 1 && (
                                                     <button
                                                     type="button"

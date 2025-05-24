@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin Dashboard
     Route::get('/enrollees', [AdminDashBoardController::class, 'index']);
+    Route::get('/export-enrollees', [AdminDashBoardController::class, 'exportEnrollees']);
+
 });
 // End Authentication routes
 
