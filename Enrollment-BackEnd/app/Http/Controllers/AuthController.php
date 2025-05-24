@@ -36,14 +36,15 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'parent_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'contact_number' => 'required|string|max:15',
-
             'child_name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'lrn_or_student_id' => 'string|max:255',
+
+            'parent_name' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:15',
+            'email' => 'required|string|email|max:255|unique:users',
             'relationship' => 'required|string|max:255',
+
         ]);
 
         $user = User::create([

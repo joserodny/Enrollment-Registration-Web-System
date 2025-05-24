@@ -42,11 +42,6 @@ export const Header = () => (
                             Login
                         </a>
                         </li>
-                        <li className="ml-4">
-                        <a className="py-2 inline-block text-white px-2 font-semibold" href="/Enrollment">
-                            Enroll now
-                        </a>
-                        </li>
                 </ul>
             </nav>
         </div>

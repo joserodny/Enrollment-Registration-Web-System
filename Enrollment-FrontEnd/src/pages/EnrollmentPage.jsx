@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import axios from 'axios';
 
 export const EnrollmentPage = () => {
@@ -9,10 +10,8 @@ export const EnrollmentPage = () => {
             child_name: '',
             date_of_birth: '',
             lrn_or_student_id: '',
-            relationship: ''
+            relationship: '',
         });
-        const [message, setMessage] = useState('');
-        const [isLoading, setIsLoading] = useState(false);
 
         const handleChange = (e) => {
             const { name, value } = e.target;
@@ -21,36 +20,53 @@ export const EnrollmentPage = () => {
 
         const handleSubmit = (e) => {
         e.preventDefault();
-        setIsLoading(true);
-        setMessage('');
+
+        Swal.fire({
+            title: 'Submitting Enrollment',
+            text: 'Please wait while we process your registration.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
 
         axios.post('http://localhost:8000/api/register', formData, {
             headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
             }
         })
         .then(response => {
-            setMessage(response.data.message || 'Registration successful! Check your email for confirmation.');
             setFormData({
-            parent_name: '',
-            email: '',
-            contact_number: '',
-            child_name: '',
-            date_of_birth: '',
-            lrn_or_student_id: '',
-            relationship: ''
+                parent_name: '',
+                email: '',
+                contact_number: '',
+                child_name: '',
+                date_of_birth: '',
+                lrn_or_student_id: '',
+                relationship: '',
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: response.data.message,
+                showConfirmButton: false,   
+                timer: 2000,                   
+                timerProgressBar: true,        
+                willClose: () => {
+                    window.location.href = '/';
+                }
             });
         })
         .catch(error => {
-            const errorMessage = error.response?.data?.message 
-            || error.message 
-            || 'Registration failed';
-            setMessage(errorMessage);
-        })
-        .finally(() => {
-            setIsLoading(false);
-        });
+                const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMessage,
+                });
+            });
         };
     return (
         <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -65,7 +81,6 @@ export const EnrollmentPage = () => {
                                 </p>
                             </div>
                         </div>
-                        {message && <div className={`message ${message.includes('success') ? 'success' : 'error'}`}>{message}</div>}
                         <div className="divide-y divide-gray-200">
                             <div className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7">
                                 {/* Student Information Section */}
@@ -172,13 +187,13 @@ export const EnrollmentPage = () => {
                                 </div>
                             </div>
                             <div className="pt-4 flex items-center space-x-4">
-                                <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none border border-gray-300 hover:bg-gray-50">
+                                <a href="/" className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none border border-gray-300 hover:bg-gray-50">
                                     <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg> Cancel
-                                </button>
-                                <button type="submit" disabled={isLoading} onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none transition duration-200">
-                                    {isLoading ? 'Submitting...' : 'Submit Enrollment'}
+                                </a>
+                                <button type="submit" onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none transition duration-200">
+                                    Submit Enrollment
                                 </button>
                             </div>
                         </div>
