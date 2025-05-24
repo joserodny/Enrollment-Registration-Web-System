@@ -25,6 +25,7 @@ export const LoginPage = () => {
         .then(response => {
             const data = response.data;
             localStorage.setItem('auth_token', data.token);
+            localStorage.setItem('user_role', data.user.role);
 
             Swal.fire({
                 title: 'Login Successful',
@@ -39,13 +40,7 @@ export const LoginPage = () => {
                 password: '',
             });
 
-            if (data.user.role === "admin") {
-                navigate("/admin-dashboard");
-            } else if (data.user.role === "parent") {
-                navigate("/dashboard");
-            } else {
-                Swal.fire("Error", "Unauthorized role", "error");
-            }
+            navigate('/Dashboard'); 
         })
         .catch(error => {
             Swal.fire(

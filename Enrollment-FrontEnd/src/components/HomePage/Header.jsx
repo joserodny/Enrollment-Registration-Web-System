@@ -1,5 +1,9 @@
-export const Header = () => (
-    <header className="absolute top-0 left-0 w-full z-50 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64">
+import LogoutButton from "../Logout";
+
+export const Header = () => {
+    const isAuthenticated = localStorage.getItem('auth_token') !== null;
+    return (
+        <header className="absolute top-0 left-0 w-full z-50 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64">
         <div className="hidden md:flex justify-between items-center py-2 border-b text-sm ">
         <div>
             <ul className="flex text-white">
@@ -37,15 +41,20 @@ export const Header = () => (
                         Home
                         </a>
                     </li>
-                        <li className="ml-4 lg:block">
+                    <li className="ml-4 lg:block">
+                        {isAuthenticated ? (
+                        <LogoutButton />
+                        ) : (
                         <a className="py-2 inline-block text-white px-2 font-semibold" href="/Login">
                             Login
                         </a>
-                        </li>
+                        )}
+                    </li>
                 </ul>
             </nav>
         </div>
 
         </div>
     </header>
-);
+    );
+}
