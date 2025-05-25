@@ -17,6 +17,8 @@ Route::post('/register', [AuthController::class, 'register']);
 // Parent Confirm email and password setup
 Route::post('/confirm-email', [AuthController::class, 'confirmEmail']);
 Route::post('/set-password', [AuthController::class, 'setPassword']);
+// Password Reset
+Route::post('/request-password-reset', [AuthController::class, 'passwordResetRequest']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

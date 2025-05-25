@@ -89,6 +89,10 @@ export const LoginPage = () => {
                             <div className="pl-5 text-center sm:text-left whitespace-nowrap">
                                 <a href="/" className="font-semibold text-sm text-gray-600 hover:text-blue-500 focus:text-blue-700">Back</a>
                             </div>
+
+                            <div className="pl-5 text-center sm:text-left whitespace-nowrap">
+                                <a href="/Request-Password" className="font-semibold text-sm text-gray-600 hover:text-blue-500 focus:text-blue-700">Reset Password</a>
+                            </div>
                         </div>
                     </div>
                 </div>

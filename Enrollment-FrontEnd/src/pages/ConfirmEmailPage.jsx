@@ -28,11 +28,11 @@ export const ConfirmEmailPage = () => {
                 text: message,
             }).then(() => {
                 if (message.toLowerCase().includes("invalid")) {
-                    navigate("/"); // Redirect to home
+                    navigate("/");
                 }
             });
         });
-    }, [token]);
+    }, [token, navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

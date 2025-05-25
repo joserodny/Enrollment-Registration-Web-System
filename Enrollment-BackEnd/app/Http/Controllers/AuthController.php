@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\EnrollmentConfirmationMail;
+use App\Mail\ResetPasswordMail;
 use App\Models\Child;
 use App\Models\User;
 use Carbon\Carbon;
@@ -151,6 +152,23 @@ class AuthController extends Controller
             'message' => 'Password set successfully.',
             'token' => $user->createToken('auth-token')->plainTextToken
         ]);
+    }
+
+    public function passwordResetRequest(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        $user->remember_token = Str::random(64);
+        $user->token_expires_at = Carbon::now()->addMinutes(30); // Valid for 30 mins
+        $user->save();
+
+        Mail::to($user->email)->send(new ResetPasswordMail($user));
+
+        return response()->json(['message' => 'Reset link sent to your email.']);
     }
 
 }

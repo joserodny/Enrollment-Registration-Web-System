@@ -3,35 +3,33 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EnrollmentConfirmationMail extends Mailable
+class ResetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
-    public $children;
     public $link;
-    /**
-     * Create a new message instance.
-     */
-    public function __construct($user, $children)
+
+
+    public function __construct($user)
     {
         $this->user = $user;
-        $this->children = $children;
-        $this->link = config('app.frontend_url') . "/Confirm/{$user->remember_token}";
-
+        $this->link = config('app.frontend_url') . "/ResetPassword/{$user->remember_token}";
     }
+
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Enrollment Confirmation Mail',
+            subject: 'Reset Your Password',
         );
     }
 
@@ -41,10 +39,9 @@ class EnrollmentConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'confirm-email',
+            view: 'reset-password',
             with: [
                 'user' => $this->user,
-                'children' => $this->children,
                 'link' => $this->link,
             ]
         );

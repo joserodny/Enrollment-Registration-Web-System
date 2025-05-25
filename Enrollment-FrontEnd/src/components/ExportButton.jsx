@@ -4,7 +4,6 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const ExportButton = () => {
     const downloadEnrollees = async () => {
-        // Show loading alert
         Swal.fire({
             title: 'Preparing File',
             html: 'Please wait while we generate the Excel file...',
@@ -32,7 +31,6 @@ export const ExportButton = () => {
         link.click();
         link.remove();
 
-        // Success notification
         Swal.fire({
             icon: 'success',
             title: 'Download Complete!',
