@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { CheckRole } from "./components/CheckRole";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { GuestRoute } from "./components/GuestRoute";
+import { ConfirmEmailPage } from "./pages/ConfirmEmailPage";
 
 export const RoutesComponent = () => {
   return (
@@ -14,6 +15,7 @@ export const RoutesComponent = () => {
       <Route path="/Enrollment" element={ <EnrollmentPage /> } />
       <Route path="/Login" element={   <GuestRoute><LoginPage /></GuestRoute>} />
       <Route path="/Dashboard" element={   <PrivateRoute><CheckRole/></PrivateRoute>} />
+      <Route path="/Confirm/:token" element={<ConfirmEmailPage />} /> 
     </Routes>
   );
 };

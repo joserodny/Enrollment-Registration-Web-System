@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const LoginPage = () => {
         const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export const LoginPage = () => {
         };
 
     const handleLogin = () => {
-        axios.post('http://localhost:8000/api/login', 
+        axios.post(`${apiUrl}/api/login`, 
             formData,
             { headers: { 'Content-Type': 'application/json' } },
         )

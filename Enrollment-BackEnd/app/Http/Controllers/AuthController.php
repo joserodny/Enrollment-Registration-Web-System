@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\EnrollmentConfirmationMail;
 use App\Models\Child;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -78,7 +79,7 @@ class AuthController extends Controller
                 'name' => $validated['parent']['parent_name'],
                 'email' => $validated['parent']['email'],
                 'relationship' => $validated['parent']['relationship'],
-                'password' => '',
+                'password' => null,
                 'contact_number' => $validated['parent']['contact_number'],
                 'remember_token' => Str::random(40),
             ]);
@@ -91,6 +92,10 @@ class AuthController extends Controller
                     'lrn_or_student_id' => $childData['lrn_or_student_id'] ?? null,
                 ]);
             }
+
+            $user->remember_token = Str::random(60);
+            $user->token_expires_at = now()->addHours(24);  // token valid for 24 hours
+            $user->save();
 
             Mail::to($user->email)->send(new EnrollmentConfirmationMail($user, $children));
 
@@ -107,35 +112,45 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    public function authenticatedUser(Request $request)
-    {
-        return response()->json($request->user());
-    }
-
-    public function completeRegistration(Request $request)
+    public function confirmEmail(Request $request)
     {
         $request->validate([
-            'token' => 'required|string',
-            'password' => 'required|string|confirmed|min:8',
+            'token' => 'required|string'
         ]);
 
-        $user = User::where('remember_token', $request->token)->first();
+        $user = User::where('remember_token', $request->token)
+                    ->where('token_expires_at', '>', Carbon::now())
+                    ->first();
 
-        if (!$user || $user->created_at->lt(now()->subDays(7))) {
-            return response()->json(['error' => 'Invalid or expired link'], 400);
+        if (!$user) {
+            return response()->json([
+                'message' => 'Invalid or expired confirmation link.'
+            ], 400);
         }
 
-        $user->password = Hash::make($request->password);
-        $user->email_verified_at = now();
-        $user->remember_token = null;
-        $user->save();
-
-        $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
-            'message' => 'Account setup complete.',
+            'message' => 'Email confirmed successfully.',
+            'user_id' => $user->id
         ]);
     }
 
+    public function setPassword(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'password' => 'required|confirmed|min:8'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $user->password = Hash::make($request->password);
+        $user->remember_token = null;
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        return response()->json([
+            'message' => 'Password set successfully.',
+            'token' => $user->createToken('auth-token')->plainTextToken
+        ]);
+    }
 
 }

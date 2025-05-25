@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const EnrollmentPage = () => {
 
@@ -48,7 +49,7 @@ export const EnrollmentPage = () => {
             },
         });
 
-        axios.post('http://localhost:8000/api/register', {
+        axios.post(`${apiUrl}/api/register`, {
             parent: parentData,
             children: childData
         }, {

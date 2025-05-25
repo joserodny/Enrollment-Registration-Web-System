@@ -1,25 +1,25 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const ExportButton = () => {
     const downloadEnrollees = async () => {
-        try {
         // Show loading alert
         Swal.fire({
             title: 'Preparing File',
             html: 'Please wait while we generate the Excel file...',
             allowOutsideClick: false,
             didOpen: () => {
-            Swal.showLoading();
+                Swal.showLoading();
             }
         });
 
         const token = localStorage.getItem('auth_token'); // or your auth token
-        const response = await axios.get('http://localhost:8000/api/export-enrollees', {
+        const response = await axios.get(`${apiUrl}/api/export-enrollees`, {
             responseType: 'blob',
             headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             }
         });
 
@@ -39,17 +39,6 @@ export const ExportButton = () => {
             text: 'The enrollees data has been downloaded successfully.',
             confirmButtonText: 'OK'
         });
-        } catch (error) {
-        console.error('Error downloading file:', error);
-        
-        // Error notification
-        Swal.fire({
-            icon: 'error',
-            title: 'Download Failed',
-            text: error.response?.data?.message || 'Failed to download the file. Please try again.',
-            confirmButtonText: 'OK'
-        });
-        }
     };
 
     return (

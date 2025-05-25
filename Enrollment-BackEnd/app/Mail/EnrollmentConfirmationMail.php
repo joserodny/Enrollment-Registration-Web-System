@@ -23,7 +23,7 @@ class EnrollmentConfirmationMail extends Mailable
     {
         $this->user = $user;
         $this->children = $children;
-        $this->link = config('app.frontend_url') . "/complete-registration/{$user->remember_token}";
+        $this->link = config('app.frontend_url') . "/Confirm/{$user->remember_token}";
 
     }
     /**

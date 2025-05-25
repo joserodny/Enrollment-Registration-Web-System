@@ -1,11 +1,11 @@
-import React from 'react';
 import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_URL;
 
-const LogoutButton = () => {
+export const LogoutButton = () => {
     const handleLogout = () => {
         const token = localStorage.getItem('auth_token');
 
-        axios.post('http://localhost:8000/api/logout', {}, {
+        axios.post(`${apiUrl}/api/logout`, {}, {
             headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -32,5 +32,3 @@ const LogoutButton = () => {
         </button>
     );
 };
-
-export default LogoutButton;

@@ -1,4 +1,4 @@
-import LogoutButton from "../Logout";
+import {LogoutButton} from "../Logout";
 
 export const Header = () => {
     const isAuthenticated = localStorage.getItem('auth_token') !== null;

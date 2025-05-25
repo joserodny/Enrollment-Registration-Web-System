@@ -1,36 +1,30 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ExportButton } from "../components/ExportButton";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const AdminDashboardPage = () => {
     const [enrollees, setEnrollees] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-
     useEffect(() => {
         const token = localStorage.getItem('auth_token');
 
         const fetchEnrollees = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/enrollees', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    params: {
-                        search: searchTerm,
-                    },
-                });
-                setEnrollees(response.data.enrollees);
-            } catch (error) {
-                console.error(error);
-            }
+            const response = await axios.get(`${apiUrl}/api/enrollees`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    search: searchTerm,
+                },
+            });
+            setEnrollees(response.data.enrollees);
         };
 
-    fetchEnrollees();
+        fetchEnrollees();
     }, [searchTerm]);
 
-
-    
     return (
     <div className="w-full h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

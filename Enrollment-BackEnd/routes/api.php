@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminDashBoardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParentDashBoardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -11,22 +12,23 @@ use Illuminate\Support\Facades\Route;
 
 // Authentication routes
 Route::post('/login', [AuthController::class, 'login']);
-
-// Enrollment routes
+// Enrollment
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/confirm-enrollment/{token}', [AuthController::class, 'confirmEnrollment']);
-Route::post('/complete-registration', [AuthController::class, 'completeRegistration']);
+// Parent Confirm email and password setup
+Route::post('/confirm-email', [AuthController::class, 'confirmEmail']);
+Route::post('/set-password', [AuthController::class, 'setPassword']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/authenticated-user', [AuthController::class, 'authenticatedUser']);
-
     // Admin Dashboard
     Route::get('/enrollees', [AdminDashBoardController::class, 'index']);
     Route::get('/export-enrollees', [AdminDashBoardController::class, 'exportEnrollees']);
 
+    // Parent Dashboard
+    Route::get('/my-children', [ParentDashBoardController::class, 'index']);
+
 });
-// End Authentication routes
+
 
 
 
