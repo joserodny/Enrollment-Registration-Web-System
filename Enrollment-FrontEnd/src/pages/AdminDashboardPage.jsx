@@ -63,7 +63,6 @@ export const AdminDashboardPage = () => {
                             <th className="px-6 py-3 text-left font-medium">Relationship</th>
                             <th className="px-6 py-3 text-left font-medium">Contact Number</th>
                             <th className="px-6 py-3 text-left font-medium">Email</th>
-                            <th className="px-6 py-3 text-left font-medium"></th>
                         </tr>
                     </thead>
                     <tbody className="bg-white">
@@ -77,7 +76,6 @@ export const AdminDashboardPage = () => {
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.relationship}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.contact_number}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.email}</td>
-                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200"></td>
                             </tr>
                             ))
                         )}

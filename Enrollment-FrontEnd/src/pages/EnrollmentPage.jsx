@@ -4,7 +4,6 @@ import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const EnrollmentPage = () => {
-
         const [parentData, setParentData] = useState({
             parent_name: '',
             email: '',

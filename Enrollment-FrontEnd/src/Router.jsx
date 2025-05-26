@@ -13,8 +13,8 @@ export const RoutesComponent = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/Request-Password" element={<RequestPassword />} />
-      <Route path="/Enrollment" element={ <EnrollmentPage /> } />
-      <Route path="/Login" element={   <GuestRoute><LoginPage /></GuestRoute>} />
+      <Route path="/Enrollment" element={ <GuestRoute><EnrollmentPage /></GuestRoute> } />
+      <Route path="/Login" element={ <GuestRoute><LoginPage /></GuestRoute>} />
       <Route path="/Dashboard" element={   <PrivateRoute><CheckRole/></PrivateRoute>} />
       <Route path="/Confirm/:token" element={<ConfirmEmailPage />} /> 
       <Route path="/ResetPassword/:token" element={<ConfirmEmailPage />} /> 

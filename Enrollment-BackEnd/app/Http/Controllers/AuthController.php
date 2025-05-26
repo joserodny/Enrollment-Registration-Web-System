@@ -35,11 +35,13 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'contact_number' => $user->contact_number,
                 'role' => $user->role,
             ],
             'token' => $token,
         ]);
     }
+
 
     public function register(Request $request)
     {
@@ -170,5 +172,7 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Reset link sent to your email.']);
     }
+
+
 
 }

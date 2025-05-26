@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Parent Dashboard
     Route::get('/my-children', [ParentDashBoardController::class, 'index']);
+    Route::put('/update-child/{id}', [ParentDashBoardController::class, 'update']);
+    Route::delete('/delete-child/{id}', [ParentDashBoardController::class, 'destroy']);
+    Route::post('/add-child', [ParentDashBoardController::class, 'store']);
 
 });
 
