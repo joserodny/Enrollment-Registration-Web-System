@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminNotificationMail;
 use App\Models\Child;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ParentDashBoardController extends Controller
 {
@@ -53,6 +55,8 @@ class ParentDashBoardController extends Controller
             'date_of_birth' => $validated['date_of_birth'],
             'lrn_or_student_id' => $validated['lrn_or_student_id'],
         ]);
+
+        Mail::to(config('mail.admin_address'))->send(new AdminNotificationMail($user, [$child]));
 
         return response()->json(['child' => $child], 201);
     }

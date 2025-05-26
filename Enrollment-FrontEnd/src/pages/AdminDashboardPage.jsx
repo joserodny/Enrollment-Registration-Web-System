@@ -56,26 +56,26 @@ export const AdminDashboardPage = () => {
                 <table className="min-w-full">
                     <thead>
                         <tr className="bg-gray-50 border-b border-gray-200 text-xs leading-4 text-gray-500 uppercase tracking-wider">
-                            <th className="px-6 py-3 text-left font-medium">Parent Name</th>
-                            <th className="px-6 py-3 text-left font-medium">Child Name</th>
+                            <th className="px-6 py-3 text-left font-medium">Name of Child</th>
                             <th className="px-6 py-3 text-left font-medium">Birthday</th>
                             <th className="px-6 py-3 text-left font-medium">LRN or Student ID</th>
-                            <th className="px-6 py-3 text-left font-medium">Relationship</th>
-                            <th className="px-6 py-3 text-left font-medium">Contact Number</th>
-                            <th className="px-6 py-3 text-left font-medium">Email</th>
+                            <th className="px-6 py-3 text-left font-medium">Parent Name</th>
+                            <th className="px-6 py-3 text-left font-medium">Parent Contact Number</th>
+                            <th className="px-6 py-3 text-left font-medium">Parent Email</th>
+                            <th className="px-6 py-3 text-left font-medium">Parent Relationship</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white">
                         {enrollees.map((parent) =>
                             parent.children.map((child, idx) => (
                             <tr key={`${parent.id}-${child.id}`} className="border-b border-gray-200">
-                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.name}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{child.name}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{new Date(child.date_of_birth).toLocaleDateString()}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{child.lrn_or_student_id}</td>
-                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.relationship}</td>
+                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.name}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.contact_number}</td>
                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.email}</td>
+                                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{parent.relationship}</td>
                             </tr>
                             ))
                         )}

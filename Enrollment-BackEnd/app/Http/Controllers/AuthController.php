@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminNotificationMail;
 use App\Mail\EnrollmentConfirmationMail;
 use App\Mail\ResetPasswordMail;
 use App\Models\Child;
@@ -101,6 +102,8 @@ class AuthController extends Controller
             $user->save();
 
             Mail::to($user->email)->send(new EnrollmentConfirmationMail($user, $children));
+            //send to admin
+            Mail::to(config('mail.admin_address'))->send(new AdminNotificationMail($user, $children));
 
             return response()->json([
                 'message' => 'Successfully registered for enrollment. Please check your email for confirmation.',
