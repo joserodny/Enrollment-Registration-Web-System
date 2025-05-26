@@ -29,21 +29,24 @@ export const EditChild = async (child) => {
 
     if (isConfirmed && formValues) {
         const token = localStorage.getItem("auth_token");
-        try {
-            await axios.put(`${apiUrl}/api/update-child/${child.id}`, {
-                child_name: formValues.name,  // <-- fix here
-                date_of_birth: formValues.dob,
-                lrn_or_student_id: formValues.lrn,
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
 
-            Swal.fire("Updated!", "Child updated successfully.", "success");
+        axios.put(`${apiUrl}/api/update-child/${child.id}`, {
+            child_name: formValues.name,
+            date_of_birth: formValues.dob,
+            lrn_or_student_id: formValues.lrn,
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(() => {
+            Swal.fire("Updated!", "Child updated successfully.", "success").then(() => {
+                window.location.reload(); // Reload after alert is closed
+            });
             return true;
-        } catch (error) {
+        })
+        .catch((error) => {
             console.error("Update error:", error.response?.data || error.message);
             Swal.fire("Error", "Something went wrong while updating.", "error");
-        }
+        });
     }
 
     return false;
